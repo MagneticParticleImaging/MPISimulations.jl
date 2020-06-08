@@ -1,0 +1,13 @@
+name = "MPISimulations"
+uuid = "abcf69e9-4b5c-4468-b5cb-d8c350d1eec7"
+authors = ["Martin Möddel <m.hofmann@uke.de> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
