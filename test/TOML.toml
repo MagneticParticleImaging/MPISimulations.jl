@@ -1,0 +1,9 @@
+[Test]
+type = "ComplexF64"
+key = 42
+
+[Test.Table]
+
+[Number.Complex]
+re = 1
+im = 0.5

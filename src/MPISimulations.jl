@@ -1,5 +1,7 @@
 module MPISimulations
 
-# Write your package code here.
+using TOML
+
+include("TOML.jl")
 
 end
