@@ -15,6 +15,5 @@ macro mustimplement(sig)
     while isa(arg1,Expr)
         arg1 = arg1.args[1]
     end
-    @info "" arg1
     :($(esc(sig)) = error($(Expr(:quote,arg1)),"::",typeof($(esc(arg1)))," must implement ", $(Expr(:quote,sig))))
 end

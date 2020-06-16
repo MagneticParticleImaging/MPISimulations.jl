@@ -70,8 +70,8 @@ function getTableName(T::Type)
     out = String[]
     while T != Any
         typeString = string(T)
-        m = match(r"^\w+", typeString)
-        pushfirst!(out,m.match)
+        m = match(r"^(?:\w*\.)*(\w+)", typeString)
+	pushfirst!(out,m.captures[1])
         T = supertype(T)
     end
     return join(out,".")
