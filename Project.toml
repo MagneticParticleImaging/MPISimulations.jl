@@ -9,6 +9,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 TOML = "191fdcea-f9f2-43e0-b922-d33f71e2abc3"
 
 [compat]
+StaticArrays = "0.12"
 TOML = "0.4"
 julia = "1"
 
