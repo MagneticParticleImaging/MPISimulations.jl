@@ -1,0 +1,9 @@
+[TracerDistributions.StaticTracerDistributions.AxisOrientedBox]    
+tracerConcentration = 42e-2
+center = [0.0,0.0,0.0]
+positiveHalfLengths = [1e-3,1e-3,1e-3]
+
+[TracerDistributions.StaticTracerDistributions.Sphere]    
+tracerConcentration = 42e-2
+center = [0.0,0.0,0.0]
+radius = 1e-3

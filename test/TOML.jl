@@ -18,7 +18,6 @@ using TOML
 	# test getType function
 	@test MPISimulations.getType(params,"Test") == ComplexF64
 	@test ismissing(MPISimulations.getType(params,"Test.Table"))
-	@info "" MPISimulations.getType(params,"Test.Table")
 
 	# test initialize function
 	@test MPISimulations.initialize(Complex,params,Float64) == ComplexF64(1.0,0.5)
