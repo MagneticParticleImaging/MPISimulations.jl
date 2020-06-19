@@ -19,4 +19,7 @@ using TOML, StaticArrays, LinearAlgebra
 	r = zeros(SVector{3,Float64})
 	@test MPISimulations.tracerConcentration(aob,r,t) == 0.42
 	@test MPISimulations.tracerConcentration(sphere,r,t) == 0.42
+	r = SVector{3,Float64}(1.01e-3,0,0)
+	@test MPISimulations.tracerConcentration(aob,r,t) == 0.0
+	@test MPISimulations.tracerConcentration(sphere,r,t) == 0.0
 end
