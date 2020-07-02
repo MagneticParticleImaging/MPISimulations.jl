@@ -1,6 +1,6 @@
 module MPISimulations
 
-using TOML, StaticArrays, LinearAlgebra
+using Pkg.TOML, StaticArrays, LinearAlgebra
 
 include("Misc.jl")
 include("MagneticMoments.jl")

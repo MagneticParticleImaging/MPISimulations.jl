@@ -1,4 +1,4 @@
-using TOML, StaticArrays, LinearAlgebra
+using Pkg.TOML, StaticArrays, LinearAlgebra
 
 @testset "MagneticMoments.jl" begin
 	params = TOML.parsefile("MagneticMoments.toml")

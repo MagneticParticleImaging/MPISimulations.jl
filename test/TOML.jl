@@ -1,4 +1,4 @@
-using TOML
+using Pkg.TOML
 
 @testset "TOML.jl" begin
 	params = TOML.parsefile("TOML.toml")

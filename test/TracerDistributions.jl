@@ -1,4 +1,4 @@
-using TOML, StaticArrays, LinearAlgebra
+using Pkg.TOML, StaticArrays, LinearAlgebra
 
 @testset "TracerDistributions.jl" begin
 	params = TOML.parsefile("TracerDistributions.toml")
