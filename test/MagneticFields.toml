@@ -8,6 +8,5 @@ magneticFieldStrength = [0.12,0.12,0.12]
 [SinusoidalExcitationField]
 frequency = 25e3
 phase = 0.0
-
 [SinusoidalExcitationField.excitationAmplitude.StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.12,0.12]

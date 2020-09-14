@@ -3,5 +3,6 @@ using Test
 
 include("MagneticMoments.jl")
 include("MagneticFields.jl")
+include("Magnetization.jl")
 include("TOML.jl")
 include("TracerDistributions.jl")
