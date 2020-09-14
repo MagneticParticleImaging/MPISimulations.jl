@@ -3,7 +3,7 @@ using Pkg.TOML, StaticArrays, LinearAlgebra
 @testset "MagneticMoments.jl" begin
 	params = TOML.parsefile("MagneticMoments.toml")
 	
-	magneticMoment = MPISimulations.initialize(MPISimulations.Langevin,params,Float64)
+	magneticMoment = MPISimulations.initialize(MPISimulations.Langevin,"Langevin",params,Float64)
 	t = randn()
 	H = rand(SVector{3,Float64})
 	H = zero(SVector{3,Float64})

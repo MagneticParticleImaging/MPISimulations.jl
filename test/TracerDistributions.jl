@@ -3,8 +3,8 @@ using Pkg.TOML, StaticArrays, LinearAlgebra
 @testset "TracerDistributions.jl" begin
 	params = TOML.parsefile("TracerDistributions.toml")
 
-	aob = MPISimulations.initialize(MPISimulations.AxisOrientedBox,params,Float64)
-	sphere = MPISimulations.initialize(MPISimulations.Sphere,params,Float64)
+	aob = MPISimulations.initialize(MPISimulations.AxisOrientedBox,"AxisOrientedBox",params,Float64)
+	sphere = MPISimulations.initialize(MPISimulations.Sphere,"Sphere",params,Float64)
 	t = randn()
 	r = zeros(SVector{3,Float64})
 	@test MPISimulations.isInside(aob,r)

@@ -4,6 +4,6 @@ key = 42
 
 [Test.Table]
 
-[Number.Complex]
+[ComplexNumber]
 re = 1
 im = 0.5

@@ -1,7 +1,13 @@
-[MagneticFields.StaticMagneticFields.StaticGradientField]    
+[StaticGradientField]    
 center = [0.0,0.0,0.0]
 gradient = [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,-2.0]]
 
-[MagneticFields.StaticMagneticFields.StaticHomogeneousField]
+[StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.12,0.12]
 
+[SinusoidalExcitationField]
+frequency = 25e3
+phase = 0.0
+
+[SinusoidalExcitationField.excitationAmplitude.StaticHomogeneousField]
+magneticFieldStrength = [0.12,0.12,0.12]

@@ -31,9 +31,6 @@ function getValue(params::Dict,tablename::String,key::String;valueOptional::Bool
     else
 	    value = get(params,key,missing)
         ismissing(value) & !valueOptional && throw(MissingException("key $(key) expected in table [$(tablename)] but missing."))
-        if typeof(value) <: Array{T} where {T<:Array}
-            value = hcat(value...)
-        end
 	    return value
     end
 end
@@ -56,10 +53,29 @@ previously parsed into the dictionary `params`. To this end all values obtained
 from the TOML are converted to the type `floatType` or arrays thereof. So `T`
 needs to have a suitable constructor.
 """
-function initialize(T::Type,params::Dict,floatType::Type)
+function initialize(T::Type,tablename::String,params::Dict,floatType::Type)
     fieldNamesT = map(string,fieldnames(T))
-    fieldValues = map(key->getValue(params,getTableName(T),key),fieldNamesT)
-    fieldValues = map(x->floatType.(x),fieldValues)
+    values = map(key->getValue(params,tablename,key),fieldNamesT)
+    fieldValues = []
+    for value in values
+        if typeof(value) <: Real
+            push!(fieldValues,floatType(value))
+        elseif typeof(value) <: Array{T} where {T<:Array}
+            push!(fieldValues,floatType.(hcat(value...)))
+        elseif typeof(value) <: Array{T} where {T<:Real}
+            push!(fieldValues,floatType.(value))
+        elseif typeof(value) <: Dict{String,Any}
+            if length(keys(value))==1
+                typeName = collect(keys(value))[1]
+                type = eval(Symbol(typeName))
+                push!(fieldValues,initialize(type,typeName,value,floatType))
+            else
+                throw(ErrorException("Recursive initialization failed. Dictionariy $value expected to have a single key only."))
+            end
+        else
+            throw(ErrorException("I do not know how to handle value $value when trying to initialize type $T from table $tablename"))
+        end
+    end
     return T(fieldValues...)
 end
 
@@ -74,7 +90,7 @@ function getTableName(T::Type)
     while T != Any
         typeString = string(T)
         m = match(r"^(?:\w*\.)*(\w+)", typeString)
-	pushfirst!(out,m.captures[1])
+	    pushfirst!(out,m.captures[1])
         T = supertype(T)
     end
     return join(out,".")

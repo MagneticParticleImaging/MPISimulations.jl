@@ -20,8 +20,8 @@ using Pkg.TOML
 	@test ismissing(MPISimulations.getType(params,"Test.Table"))
 
 	# test initialize function
-	@test MPISimulations.initialize(Complex,params,Float64) == ComplexF64(1.0,0.5)
-	@test MPISimulations.initialize(Complex,params,Float32) == ComplexF32(1.0,0.5)
+	@test MPISimulations.initialize(Complex,"ComplexNumber",params,Float64) == ComplexF64(1.0,0.5)
+	@test MPISimulations.initialize(Complex,"ComplexNumber",params,Float32) == ComplexF32(1.0,0.5)
 
 	# test getTableName function
 	@test MPISimulations.getTableName(Complex) == "Number.Complex"
