@@ -30,7 +30,10 @@ function getValue(params::Dict,tablename::String,key::String;valueOptional::Bool
 	    return missing
     else
 	    value = get(params,key,missing)
-	    ismissing(value) & !valueOptional && throw(MissingException("key $(key) expected in table [$(tablename)] but missing."))
+        ismissing(value) & !valueOptional && throw(MissingException("key $(key) expected in table [$(tablename)] but missing."))
+        if typeof(value) <: Array{T} where {T<:Array}
+            value = hcat(value...)
+        end
 	    return value
     end
 end

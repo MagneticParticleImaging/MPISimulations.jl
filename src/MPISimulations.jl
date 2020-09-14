@@ -6,5 +6,6 @@ include("Misc.jl")
 include("MagneticMoments.jl")
 include("TOML.jl")
 include("TracerDistributions.jl")
+include("MagneticFields.jl")
 
 end
