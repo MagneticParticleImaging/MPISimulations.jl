@@ -4,6 +4,12 @@ using Pkg.TOML, StaticArrays, LinearAlgebra
 	params = TOML.parsefile("MagneticMoments.toml")
 	
 	magneticMoment = MPISimulations.initialize(MPISimulations.Langevin,"Langevin",params,Float64)
+	for T in [Float64,Float32,]
+		magneticMomentT = MPISimulations.initializeLangevin(T)
+		@test magneticMomentT.msat ≈ magneticMoment.msat
+		@test magneticMomentT.beta ≈ magneticMoment.beta
+	end
+	
 	t = randn()
 	H = rand(SVector{3,Float64})
 	H = zero(SVector{3,Float64})

@@ -11,6 +11,25 @@ struct Langevin{T<:Real} <: MagneticMoments{T}
     beta::T
 end
 
+"""
+    `initializeLangevin(S;d=25e-9,T=294,Mrel=0.6)`
+
+Initialize Langevin type magnetic nanoparticles with diameter d (meter),
+temperature T (Kelvin) and relative saturation magnetization Mrel = M*μ₀
+(μ₀ being the vacuum permeability) using the keyword arguments. The underlying
+numeric type can be specified via the optional argument S which can be any 
+subtype of Real.
+"""
+function initializeLangevin(S::Type{U}=Float64;d=25e-9,T=294,Mrel=0.6) where U<:Real
+    k = 1.380650424e-23 #Boltzman constant
+    μ₀ = 4*π*1e-7 #vacuum permeability
+    M = Mrel / μ₀ #saturation magnetization of magnetic material
+    msat = M * π/6*d^3 #saturation magnetic moment of nanoparticle
+    beta = msat /(k*T) #H measured in T/μ₀
+
+    Langevin{S}(msat,beta)
+end
+
 function meanMagneticMoment(langevin::Langevin{T},H::SVector{3,T},t::T) where T<:Real
     if norm(H)!=0
         x = langevin.beta*norm(H)
