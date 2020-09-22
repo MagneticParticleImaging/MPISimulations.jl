@@ -1,9 +1,9 @@
 [AxisOrientedBox]    
-tracerConcentration = 42e-2
+tracerConcentration = 1.8141555811322022e15
 center = [0.0,0.0,0.0]
 positiveHalfLengths = [1e-3,1e-3,1e-3]
 
 [Sphere]    
-tracerConcentration = 42e-2
+tracerConcentration = 1.8141555811322022e15
 center = [0.0,0.0,0.0]
 radius = 1e-3

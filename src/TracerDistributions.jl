@@ -1,13 +1,13 @@
 abstract type TracerDistributions{T} end
 
 # define interface
-## specific subtypes should implement function returning tracer concentration as as type T for given location r and time t
+## specific subtypes should implement function returning number of nanoparticles per m³ as as type T for given location r and time t
 @mustimplement tracerConcentration(tracerDistribution::TracerDistributions{T},r::SVector{3,T},t::T) where T<:Real
 
 ## specific subtypes should implement function returning if tracer distribution is zero at position r for all times
 @mustimplement isZero(tracerDistributions::TracerDistributions{T},r::SVector{3,T}) where T<:Real
 
-# define specific subtypes
+# define abstract subtypes
 ## static tracer distributions
 abstract type StaticTracerDistributions{T} <: TracerDistributions{T} end
 
@@ -43,4 +43,22 @@ end
 
 @inline function isZero(sphere::Sphere{T},r::SVector{3,T}) where T<:Real
     return norm(sphere.center-r)>sphere.radius
+end
+
+# misc
+"""
+    `numberOfParticles(cmolFe=1e-3,d=25e-9)`
+
+Most often, in experiments the iron density (mol(Fe)/L) is provided rather
+than the particle concentration (number of particles per m³). This function
+allows to convert the former `cmolFe` (mol(Fe)/L) to number of particles 
+per m³ assuming nanoparticles with a spherical magnetite core of diameter `d`.
+"""
+function numberOfParticles(cmolFe=1e-3,d=25e-9)
+    molarMassFe3O4 = 0.231533 # kg/mol(Fe3O4)
+    densityFe3O4 = 5200 # kg/m³
+    volumeNanoparticle = pi/6 * d^3 # m³
+    weightNanoparticle = volumeNanoparticle .* densityFe3O4 # kg
+    conversionFactor = molarMassFe3O4 / (3 * weightNanoparticle) # Number of nanoparticles per mol(Fe)/m³ (factor 3 accounts for the fact that Fe3O4 contains 3 iron atoms)
+    return cmolFe * conversionFactor # Number of nanoparticles per m³
 end
