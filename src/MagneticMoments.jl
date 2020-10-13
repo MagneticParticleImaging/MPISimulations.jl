@@ -2,7 +2,7 @@ abstract type MagneticMoments{T} end
 
 # define interface
 ## return magnetic moment of a single particle as SVector{3,T} for given external field H at time t
-@mustimplement meanMagneticMoment(magneticMoment::MagneticMoments{T},H::SVector{3,T},t::T) where T<:Real
+@mustimplement meanMagneticMoment(magneticMoment::MagneticMoments{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
 
 # define specific subtypes
 ## Langevin Model
@@ -30,7 +30,7 @@ function initializeLangevin(S::Type{U}=Float64;d=25e-9,T=294,Mrel=0.6) where U<:
     Langevin{S}(msat,beta)
 end
 
-function meanMagneticMoment(magneticMoment::Langevin{T},H::SVector{3,T},t::T) where T<:Real
+function meanMagneticMoment(magneticMoment::Langevin{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
     if norm(H)!=0
         x = magneticMoment.beta*norm(H)
         return magneticMoment.msat*(coth(x) - 1/x)*normalize(H)

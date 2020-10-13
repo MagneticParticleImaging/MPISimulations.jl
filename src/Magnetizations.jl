@@ -14,5 +14,5 @@ end
 @inline isZero(magnetization::SeparableMagnetization,r::SVector{3,T}) where T<:Real = isZero(magnetization.tracerDistribution,r)
 
 function magnetizationField(magnetization::SeparableMagnetization{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
-    return tracerConcentration(magnetization.tracerDistribution,r,t)*meanMagneticMoment(magnetization.magneticMoment,H,t)
+    return tracerConcentration(magnetization.tracerDistribution,r,t)*meanMagneticMoment(magnetization.magneticMoment,H,r,t)
 end
