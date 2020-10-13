@@ -28,8 +28,8 @@ struct AxisOrientedBox{T<:Real} <: StaticTracerDistributions{T}
     AxisOrientedBox(tracerConcentration::T,center::Vector{T},positiveHalfLengths::Vector{T}) where T<:Real = new{T}(tracerConcentration,SVector{3,T}(center),SVector{3,T}(positiveHalfLengths))
 end
 
-@inline function isZero(axisOrientedBox::AxisOrientedBox{T},r::SVector{3,T}) where T<:Real
-    return !all(abs.(axisOrientedBox.center-r).<=axisOrientedBox.positiveHalfLengths)
+@inline function isZero(tracerDistribution::AxisOrientedBox{T},r::SVector{3,T}) where T<:Real
+    return !all(abs.(tracerDistribution.center-r).<=tracerDistribution.positiveHalfLengths)
 end
 
 ### homogeneous tracer distribution within sphere
@@ -41,8 +41,8 @@ struct Sphere{T<:Real} <: StaticTracerDistributions{T}
     Sphere(tracerConcentration::T,center::Vector{T},radius::T) where T<:Real = new{T}(tracerConcentration,SVector{3,T}(center),radius)
 end
 
-@inline function isZero(sphere::Sphere{T},r::SVector{3,T}) where T<:Real
-    return norm(sphere.center-r)>sphere.radius
+@inline function isZero(tracerDistribution::Sphere{T},r::SVector{3,T}) where T<:Real
+    return norm(tracerDistribution.center-r)>tracerDistribution.radius
 end
 
 # misc

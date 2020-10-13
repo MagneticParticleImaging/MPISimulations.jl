@@ -11,8 +11,8 @@ struct SeparableMagnetization{T,U<:TracerDistributions{T},V<:MagneticMoments{T}}
     magneticMoment::V
 end
 
-@inline isZero(separableMagnetization::SeparableMagnetization,r::SVector{3,T}) where T<:Real = isZero(separableMagnetization.tracerDistribution,r)
+@inline isZero(magnetization::SeparableMagnetization,r::SVector{3,T}) where T<:Real = isZero(magnetization.tracerDistribution,r)
 
-function magnetizationField(separableMagnetization::SeparableMagnetization{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
-    return tracerConcentration(separableMagnetization.tracerDistribution,r,t)*meanMagneticMoment(separableMagnetization.magneticMoment,H,t)
+function magnetizationField(magnetization::SeparableMagnetization{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
+    return tracerConcentration(magnetization.tracerDistribution,r,t)*meanMagneticMoment(magnetization.magneticMoment,H,t)
 end

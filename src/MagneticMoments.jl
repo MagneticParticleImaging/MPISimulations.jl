@@ -30,10 +30,10 @@ function initializeLangevin(S::Type{U}=Float64;d=25e-9,T=294,Mrel=0.6) where U<:
     Langevin{S}(msat,beta)
 end
 
-function meanMagneticMoment(langevin::Langevin{T},H::SVector{3,T},t::T) where T<:Real
+function meanMagneticMoment(magneticMoment::Langevin{T},H::SVector{3,T},t::T) where T<:Real
     if norm(H)!=0
-        x = langevin.beta*norm(H)
-        return langevin.msat*(coth(x) - 1/x)*normalize(H)
+        x = magneticMoment.beta*norm(H)
+        return magneticMoment.msat*(coth(x) - 1/x)*normalize(H)
     else
         return zero(SVector{3,T})
     end

@@ -10,10 +10,10 @@ abstract type MagneticFields{T} end
 abstract type StaticMagneticFields{T} <: MagneticFields{T} end
 
 ## return magnetic field strength H as SVector{3,T} at given location r
-@mustimplement magneticFieldStrength(staticMagneticField::StaticMagneticFields{T},r::SVector{3,T}) where T<:Real
+@mustimplement magneticFieldStrength(magneticField::StaticMagneticFields{T},r::SVector{3,T}) where T<:Real
 
-function magneticFieldStrength(staticMagneticField::StaticMagneticFields{T},r::SVector{3,T},t::T) where T<:Real
-    return magneticFieldStrength(staticMagneticField,r)
+function magneticFieldStrength(magneticField::StaticMagneticFields{T},r::SVector{3,T},t::T) where T<:Real
+    return magneticFieldStrength(magneticField,r)
 end
 
 ## ideal gradient field
@@ -21,11 +21,11 @@ struct StaticGradientField{T<:Real} <: StaticMagneticFields{T}
     center::SVector{3,T}
     gradient::SMatrix{3,3,T}
 
-    StaticGradientField(center::Vector{T},gradient::Matrix{T}) where T<:Real = new{T}(SVector{3,T}(center),SMatrix{3,3,T}(gradient))
+    StaticGradientField(center::AbstractVector{T},gradient::AbstractMatrix{T}) where T<:Real = new{T}(SVector{3,T}(center),SMatrix{3,3,T}(gradient))
 end
 
-function magneticFieldStrength(staticGradientField::StaticGradientField{T},r::SVector{3,T}) where T<:Real
-    return staticGradientField.gradient*(r-staticGradientField.center)
+function magneticFieldStrength(magneticField::StaticGradientField{T},r::SVector{3,T}) where T<:Real
+    return magneticField.gradient*(r-magneticField.center)
 end
 
 ## ideal homogenous field
@@ -35,8 +35,8 @@ struct StaticHomogeneousField{T<:Real} <: StaticMagneticFields{T}
     StaticHomogeneousField(magneticFieldStrength::Vector{T}) where T<:Real = new{T}(SVector{3,T}(magneticFieldStrength))
 end
 
-function magneticFieldStrength(staticHomogeneousField::StaticHomogeneousField{T},r::SVector{3,T}) where T<:Real
-    return staticHomogeneousField.magneticFieldStrength
+function magneticFieldStrength(magneticField::StaticHomogeneousField{T},r::SVector{3,T}) where T<:Real
+    return magneticField.magneticFieldStrength
 end
 
 # dynamic magnetic fields
@@ -47,6 +47,6 @@ struct SinusoidalField{T<:Real} <: MagneticFields{T}
     phase::T
 end
 
-function magneticFieldStrength(sinusoidalField::SinusoidalField{T},r::SVector{3,T},t::T) where T<:Real
-    return magneticFieldStrength(sinusoidalField.spatialFieldAmplitude,r)*sin(2*pi*sinusoidalField.frequency*t+sinusoidalField.phase)
+function magneticFieldStrength(magneticField::SinusoidalField{T},r::SVector{3,T},t::T) where T<:Real
+    return magneticFieldStrength(magneticField.spatialFieldAmplitude,r)*sin(2*pi*magneticField.frequency*t+magneticField.phase)
 end
