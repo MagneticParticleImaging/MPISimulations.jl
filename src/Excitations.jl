@@ -87,7 +87,7 @@ function magneticExcitationFieldSequence(excitation::ExcitationField3D{T},r::SVe
     fields = zeros(SVector{3,T},length(s1))
 
     for i in 1:length(fields)
-        fields[i] = Hs + H1*s1[i] + H2*s2[i] + H3*s2[i]
+        fields[i] = Hs + H1*s1[i] + H2*s2[i] + H3*s3[i]
     end
     return fields
 end
