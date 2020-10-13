@@ -15,6 +15,6 @@ using Pkg.TOML, StaticArrays
     @test MPISimulations.magneticFieldStrength(staticGradientField,r) ≈ G*r
     @test MPISimulations.magneticFieldStrength(staticGradientField,r,t) ≈ G*r
 
-    sinusoidalExcitationField = MPISimulations.initialize(MPISimulations.SinusoidalExcitationField,"SinusoidalExcitationField",params,Float64)
-    @test MPISimulations.magneticFieldStrength(sinusoidalExcitationField,r,t) ≈ sin(2*pi*25e3*t)*SVector{3,Float64}(0.12,0.12,0.12)
+    sinusoidalField = MPISimulations.initialize(MPISimulations.SinusoidalField,"SinusoidalField",params,Float64)
+    @test MPISimulations.magneticFieldStrength(sinusoidalField,r,t) ≈ sin(2*pi*25e3*t)*SVector{3,Float64}(0.12,0.12,0.12)
 end
