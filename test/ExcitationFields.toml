@@ -1,0 +1,30 @@
+[ExcitationField]
+excitationStrengths = [1.0,0.0,-1.0]
+
+[ExcitationField.selectionField.StaticGradientField]
+center = [0.0,0.0,0.0]
+gradient = [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,-2.0]]
+
+[ExcitationField.excitationField.SinusoidalField]
+frequency = 25000
+phase = 0
+[ExcitationField.excitationField.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+magneticFieldStrength = [0.0,0.0,0.12]
+
+[ExcitationField.excitationField1.SinusoidalField]
+frequency = 24509.803921568626
+phase = 0
+[ExcitationField.excitationField1.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+magneticFieldStrength = [0.12,0.0,0.0]
+
+[ExcitationField.excitationField2.SinusoidalField]
+frequency = 25252.52525252525
+phase = 1.0
+[ExcitationField.excitationField2.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+magneticFieldStrength = [0.12,0.0,0.0]
+
+[ExcitationField.excitationField3.SinusoidalField]
+frequency = 26041.666666666668
+phase = 2.0
+[ExcitationField.excitationField3.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+magneticFieldStrength = [0.12,0.0,0.0]

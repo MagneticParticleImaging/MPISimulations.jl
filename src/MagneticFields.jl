@@ -42,11 +42,11 @@ end
 # dynamic magnetic fields
 ## ideal homogenous field with sinusoidal 1D excitation
 struct SinusoidalField{T<:Real} <: MagneticFields{T}
-    spatialFieldAmplitude::StaticMagneticFields{T}
+    spatialFieldProfile::StaticMagneticFields{T}
     frequency::T
     phase::T
 end
 
 function magneticFieldStrength(magneticField::SinusoidalField{T},r::SVector{3,T},t::T) where T<:Real
-    return magneticFieldStrength(magneticField.spatialFieldAmplitude,r)*sin(2*pi*magneticField.frequency*t+magneticField.phase)
+    return magneticFieldStrength(magneticField.spatialFieldProfile,r)*sin(2*pi*magneticField.frequency*t+magneticField.phase)
 end

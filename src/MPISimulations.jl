@@ -10,7 +10,7 @@ include("MagneticFields.jl")
 include("MagneticMoments.jl")
 include("Magnetizations.jl")
 include("Receivers.jl")
-include("Excitations.jl")
+include("ExcitationFields.jl")
 include("Quadrature.jl")
 
 end
