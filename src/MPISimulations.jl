@@ -1,6 +1,6 @@
 module MPISimulations
 
-using Pkg.TOML, StaticArrays, LinearAlgebra
+using Pkg.TOML, StaticArrays, LinearAlgebra, FastGaussQuadrature
 
 include("Misc.jl")
 include("TOML.jl")
@@ -11,5 +11,6 @@ include("MagneticMoments.jl")
 include("Magnetizations.jl")
 include("Receivers.jl")
 include("Excitations.jl")
+include("Quadrature.jl")
 
 end

@@ -1,0 +1,17 @@
+[SeparableMagnetization1]
+[SeparableMagnetization1.tracerDistribution.AxisOrientedBox]    
+tracerConcentration = 1.0
+center = [0.0,1e-3,-2e-3]
+positiveHalfLengths = [1e-3,2e-3,3e-3]
+[SeparableMagnetization1.magneticMoment.Langevin]    
+msat = 7e-18
+beta = 2e3
+
+[SeparableMagnetization2]
+[SeparableMagnetization2.tracerDistribution.Sphere]    
+tracerConcentration = 1.0
+center = [0.0,1e-3,-2e-3]
+radius = 1e-3
+[SeparableMagnetization2.magneticMoment.Langevin]    
+msat = 7e-18
+beta = 2e3

@@ -1,15 +1,17 @@
 name = "MPISimulations"
 uuid = "abcf69e9-4b5c-4468-b5cb-d8c350d1eec7"
 authors = ["Martin Möddel <m.hofmann@uke.de> and contributors"]
-version = "0.1.0"
+version = "0.0.0"
 
 [deps]
+FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
-StaticArrays = "0.12"
+FastGaussQuadrature = ">= 0.4"
+StaticArrays = ">= 0.12"
 julia = ">= 1.2"
 
 [extras]

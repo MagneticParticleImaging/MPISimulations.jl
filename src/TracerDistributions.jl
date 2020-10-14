@@ -5,7 +5,10 @@ abstract type TracerDistributions{T} end
 @mustimplement tracerConcentration(tracerDistribution::TracerDistributions{T},r::SVector{3,T},t::T) where T<:Real
 
 ## specific subtypes should implement function returning if tracer distribution is zero at position r for all times
-@mustimplement isZero(tracerDistributions::TracerDistributions{T},r::SVector{3,T}) where T<:Real
+@mustimplement isZero(tracerDistribution::TracerDistributions{T},r::SVector{3,T}) where T<:Real
+
+# specific subtypes should implement function returning quadrature nodes of a given density for tracerDistributions
+@mustimplement quadratureNodes(tracerDistribution::TracerDistributions{T},density) where T<:Real
 
 # define abstract subtypes
 ## static tracer distributions
@@ -32,6 +35,26 @@ end
     return !all(abs.(tracerDistribution.center-r).<=tracerDistribution.positiveHalfLengths)
 end
 
+function quadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3) where T<:Real
+    nx,ny,nz = round.(Int,2*density*tracerDistribution.positiveHalfLengths)
+    nx = max(nx,1)
+    ny = max(ny,1)
+    nz = max(nz,1)
+    n = tuple(nx,ny,nz)
+    
+    nodesx, weightsx = gausslegendre(nx)
+    nodesx = tracerDistribution.positiveHalfLengths[1]*nodesx .+ tracerDistribution.center[1]
+    weightsx *= tracerDistribution.positiveHalfLengths[1]
+    nodesy, weightsy = gausslegendre(ny)
+    nodesy = tracerDistribution.positiveHalfLengths[2]*nodesy .+ tracerDistribution.center[2]
+    weightsy *= tracerDistribution.positiveHalfLengths[2]
+    nodesz, weightsz = gausslegendre(nz)
+    nodesz = tracerDistribution.positiveHalfLengths[3]*nodesz .+ tracerDistribution.center[3]
+    weightsz *= tracerDistribution.positiveHalfLengths[3]   
+
+    return GaussLegendre{T}(nodesx,weightsx,nodesy,weightsy,nodesz,weightsz,n)
+end
+
 ### homogeneous tracer distribution within sphere
 struct Sphere{T<:Real} <: StaticTracerDistributions{T}
     tracerConcentration::T
@@ -43,6 +66,14 @@ end
 
 @inline function isZero(tracerDistribution::Sphere{T},r::SVector{3,T}) where T<:Real
     return norm(tracerDistribution.center-r)>tracerDistribution.radius
+end
+
+function quadratureNodes(tracerDistribution::Sphere{T},density=10/1e-3) where T<:Real
+    r = tracerDistribution.radius
+    center = tracerDistribution.center
+    lfb = center - SVector{3,T}(r,r,r)
+    rrt = center + SVector{3,T}(r,r,r)
+    return MidPoint(lfb,rrt,density)
 end
 
 # misc
