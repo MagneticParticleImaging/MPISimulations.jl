@@ -8,7 +8,7 @@ abstract type TracerDistributions{T} end
 @mustimplement isZero(tracerDistribution::TracerDistributions{T},r::SVector{3,T}) where T<:Real
 
 # specific subtypes should implement function returning quadrature nodes of a given density for tracerDistributions
-@mustimplement quadratureNodes(tracerDistribution::TracerDistributions{T},density) where T<:Real
+@mustimplement QuadratureNodes(tracerDistribution::TracerDistributions{T},density) where T<:Real
 
 # define abstract subtypes
 ## static tracer distributions
@@ -35,7 +35,7 @@ end
     return !all(abs.(tracerDistribution.center-r).<=tracerDistribution.positiveHalfLengths)
 end
 
-function quadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3) where T<:Real
+function QuadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3) where T<:Real
     nx,ny,nz = round.(Int,2*density*tracerDistribution.positiveHalfLengths)
     nx = max(nx,1)
     ny = max(ny,1)
@@ -68,7 +68,7 @@ end
     return norm(tracerDistribution.center-r)>tracerDistribution.radius
 end
 
-function quadratureNodes(tracerDistribution::Sphere{T},density=10/1e-3) where T<:Real
+function QuadratureNodes(tracerDistribution::Sphere{T},density=10/1e-3) where T<:Real
     r = tracerDistribution.radius
     center = tracerDistribution.center
     lfb = center - SVector{3,T}(r,r,r)

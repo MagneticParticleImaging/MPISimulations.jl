@@ -5,8 +5,8 @@ using Pkg.TOML
 
     magnetization = MPISimulations.initialize(MPISimulations.SeparableMagnetization,"SeparableMagnetization1",params,Float64)
     aob = magnetization.tracerDistribution
-    gl1 = MPISimulations.quadratureNodes(magnetization)
-    gl2 = MPISimulations.quadratureNodes(aob)
+    gl1 = MPISimulations.QuadratureNodes(magnetization)
+    gl2 = MPISimulations.QuadratureNodes(aob)
 
     @test gl1.nodesx == gl2.nodesx
     @test gl1.weightsx == gl2.weightsx
@@ -17,7 +17,7 @@ using Pkg.TOML
     @test gl1.n == gl2.n
     
     for density in [1/2e-2,1/2e-3,1/2e-4,1/2e-5]
-        nodesAndWeights = MPISimulations.quadratureNodes(aob, density)
+        nodesAndWeights = MPISimulations.QuadratureNodes(aob, density)
         result = 0.0
         for (r,w) in nodesAndWeights
             result += w*MPISimulations.tracerConcentration(aob,r,0.0)
@@ -27,8 +27,8 @@ using Pkg.TOML
 
     magnetization = MPISimulations.initialize(MPISimulations.SeparableMagnetization,"SeparableMagnetization2",params,Float64)
     sphere = magnetization.tracerDistribution
-    gl1 = MPISimulations.quadratureNodes(magnetization)
-    gl2 = MPISimulations.quadratureNodes(sphere)
+    gl1 = MPISimulations.QuadratureNodes(magnetization)
+    gl2 = MPISimulations.QuadratureNodes(sphere)
     @test gl1.nodesx == gl2.nodesx
     @test gl1.nodesy == gl2.nodesy
     @test gl1.nodesz == gl2.nodesz
@@ -36,7 +36,7 @@ using Pkg.TOML
     @test gl1.n == gl2.n
 
     for (density,rtol) in [(1/2e-2,1e0),(1/2e-3,1e0),(1/2e-4,1e-1),(1/2e-5,1e-3)]
-        nodesAndWeights = MPISimulations.quadratureNodes(sphere, density)
+        nodesAndWeights = MPISimulations.QuadratureNodes(sphere, density)
         result = 0.0
         for (r,w) in nodesAndWeights
             result += w*MPISimulations.tracerConcentration(sphere,r,0.0)

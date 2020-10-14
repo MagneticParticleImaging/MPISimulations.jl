@@ -7,7 +7,7 @@ abstract type Magnetizations{T} end
 @mustimplement isZero(magnetization::Magnetizations{T},r::SVector{3,T}) where T<:Real 
 
 # specific subtypes should implement function returning quadrature nodes
-@mustimplement quadratureNodes(magnetization::Magnetizations{T},density) where T<:Real
+@mustimplement QuadratureNodes(magnetization::Magnetizations{T},density) where T<:Real
 
 # separable magnetization
 struct SeparableMagnetization{T,U<:TracerDistributions{T},V<:MagneticMoments{T}} <: Magnetizations{T}
@@ -21,6 +21,6 @@ function magnetizationField(magnetization::SeparableMagnetization{T},H::SVector{
     return tracerConcentration(magnetization.tracerDistribution,r,t)*meanMagneticMoment(magnetization.magneticMoment,H,r,t)
 end
 
-function quadratureNodes(magnetization::SeparableMagnetization{T},density=10/1e-3) where T<:Real
-    return quadratureNodes(magnetization.tracerDistribution,density)
+function QuadratureNodes(magnetization::SeparableMagnetization{T},density=10/1e-3) where T<:Real
+    return QuadratureNodes(magnetization.tracerDistribution,density)
 end
