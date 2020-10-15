@@ -43,10 +43,17 @@ end
 ## ideal homogenous field with sinusoidal 1D excitation
 struct SinusoidalField{T<:Real} <: MagneticFields{T}
     spatialFieldProfile::StaticMagneticFields{T}
-    frequency::T
-    phase::T
+    baseFrequency::T
+    divider::Int
+    doubleFrequency::T
+    relativePhase::T # = phase/π
+end
+
+function SinusoidalField(spatialFieldProfile::StaticMagneticFields{T},baseFrequency::Real,divider::Real,relativePhase::Real=0.0) where T<:Real
+    doubleFrequency = 2//divider * baseFrequency
+    return SinusoidalField{T}(spatialFieldProfile,T(baseFrequency),T(divider),T(doubleFrequency),T(relativePhase))
 end
 
 function magneticFieldStrength(magneticField::SinusoidalField{T},r::SVector{3,T},t::T) where T<:Real
-    return magneticFieldStrength(magneticField.spatialFieldProfile,r)*sin(2*pi*magneticField.frequency*t+magneticField.phase)
+    return magneticFieldStrength(magneticField.spatialFieldProfile,r)*sinpi(magneticField.doubleFrequency*t+magneticField.relativePhase)
 end

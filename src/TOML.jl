@@ -57,8 +57,11 @@ function initialize(T::Type,tablename::String,params::Dict,floatType::Type)
     fieldNamesT = map(string,fieldnames(T))
     values = map(key->getValue(params,tablename,key),fieldNamesT)
     fieldValues = []
-    for value in values
-        if typeof(value) <: Real
+    for (i,value) in enumerate(values)
+        TField = fieldtype(T,i)
+        if TField <: Integer && isprimitivetype(TField)
+            push!(fieldValues,TField(value))
+        elseif typeof(value) <: Real
             push!(fieldValues,floatType(value))
         elseif typeof(value) <: Array{T} where {T<:Array}
             push!(fieldValues,floatType.(hcat(value...)))

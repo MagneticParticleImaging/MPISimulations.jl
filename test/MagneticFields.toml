@@ -6,7 +6,9 @@ gradient = [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,-2.0]]
 magneticFieldStrength = [0.12,0.12,0.12]
 
 [SinusoidalField]
-frequency = 25e3
-phase = 0.0
+baseFrequency = 2.5e6
+divider = 100
+doubleFrequency = 50e3
+relativePhase = 1.0
 [SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.12,0.12]
