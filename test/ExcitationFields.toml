@@ -1,38 +1,27 @@
-[ExcitationField]
-excitationStrengths = [1.0,0.0,-1.0]
-
-[ExcitationField.selectionField.StaticGradientField]
+[StaticGradientField]
 center = [0.0,0.0,0.0]
 gradient = [[1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,-2.0]]
 
-[ExcitationField.excitationField.SinusoidalField]
-baseFrequency = 2.5e6
-divider = 100
-doubleFrequency = 50e3
-relativePhase = 0
-[ExcitationField.excitationField.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
-magneticFieldStrength = [0.0,0.0,0.12]
-
-[ExcitationField.excitationField1.SinusoidalField]
+[SinusoidalField1]
 baseFrequency = 2.5e6
 divider = 96
 doubleFrequency = 49019.60784313725
 relativePhase = 0.0
-[ExcitationField.excitationField1.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+[SinusoidalField1.spatialFieldProfile.StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.0,0.0]
 
-[ExcitationField.excitationField2.SinusoidalField]
+[SinusoidalField2]
 baseFrequency = 2.5e6
 divider = 99
 doubleFrequency = 50505.0505050505
 relativePhase = 0.5
-[ExcitationField.excitationField2.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+[SinusoidalField2.spatialFieldProfile.StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.0,0.0]
 
-[ExcitationField.excitationField3.SinusoidalField]
+[SinusoidalField3]
 baseFrequency = 2.5e6
 divider = 96
 doubleFrequency = 52083.333333333336
 relativePhase = 1.0
-[ExcitationField.excitationField3.SinusoidalField.spatialFieldProfile.StaticHomogeneousField]
+[SinusoidalField3.spatialFieldProfile.StaticHomogeneousField]
 magneticFieldStrength = [0.12,0.0,0.0]
