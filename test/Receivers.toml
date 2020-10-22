@@ -1,8 +1,9 @@
 [Receiver]
 samplingRate = 2.5e6
-[Receiver.xSensitivity.StaticHomogeneousField]
-magneticFieldStrength = [0.12,0.12,0.12]
-[Receiver.ySensitivity.StaticHomogeneousField]
-magneticFieldStrength = [0.13,0.13,0.13]
-[Receiver.zSensitivity.StaticHomogeneousField]
-magneticFieldStrength = [0.14,0.14,0.14]
+
+[Receiver.xSensitivity]
+magneticFieldStrength = [0.1,0.0,0.0]
+[Receiver.ySensitivity]
+magneticFieldStrength = [0.0,0.11,0.0]
+[Receiver.zSensitivity]
+magneticFieldStrength = [0.0,0.0,0.12]

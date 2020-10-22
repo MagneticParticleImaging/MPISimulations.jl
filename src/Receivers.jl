@@ -1,49 +1,53 @@
-abstract type Receivers{T} end
+# Define abstract interface
+"""
+$(TYPEDEF)
 
-# define interface
-## return receive coil sensitivity (3 components each) of all L receive
-## channels at given location r as Lx3 matrix.
-@mustimplement receiverCoilSensitivities(receiver::Receivers{T},r::SVector{3,T}) where T<:Real
+Abstract supertype for receive coils.
+"""
+abstract type ReceiveCoils{T,N} end
+
+"""
+$(SIGNATURES)
+
+Initialize an receive coil setup with `samplingRate` [Hz] and multiple receive
+coils specified by their coil sensitivity [ToDo].
+`excitationFields`.
+"""
+function ReceiveCoils(samplingRate::Real, sensitivities::U) where {T,U<:Tuple{Vararg{W} where W<:MagneticFields{T}}}
+    error("ExcitationField is not implemented for selectionField::$(typeof(selectionField)) and excitationFields::$(typeof(excitationFields)).")
+end
+
+function ReceiveCoils(samplingRate::Real, sensitivities...)
+    return ReceiveCoils(samplingRate,tuple(sensitivities...))
+end
+
+"""
+$(SIGNATURES)
+
+Return a receive coil sensitivities [??] as SMatrix{N,3,T} for a given location
+r [m] and time t [s].
+"""
+function receiveCoilSensitivities(receiveCoil::ReceiveCoils{T,N},r::SVector{3,T},t::T) where {T,N}
+    error("receiveCoilSensitivities is not implemented for receiveCoil::$(typeof(receiveCoil)).")
+end
+
 
 # define specific subtypes
-## 1D receiver
-struct Receiver1D{T,U<:StaticMagneticFields{T}} <: Receivers{T}
-    samplingRate::Real
-    xSensitivity::U
+## N-dimensional receive coil setup all running with the same syncronized clock
+struct StaticReceiveCoils{T,N,V<:Tuple{Vararg{W} where W<:StaticMagneticFields{T}},U} <: ReceiveCoils{T,N}
+    samplingRate::U
+    sensitivities::V
 end
 
-function receiverCoilSensitivities(receiver::Receiver1D{T},r::SVector{3,T}) where T<:Real
-    px = magneticFieldStrength(receiver.xSensitivity,r)
-
-    return SMatrix{1,3}(px)
+function receiveCoilSensitivities(receiveCoil::StaticReceiveCoils{T,N},r::SVector{3,T},t::T) where {T,N}
+    m = MMatrix{N,3,T}(undef)
+    @inbounds for i =1:N
+        m[i,:] = magneticFieldStrength(receiveCoil.sensitivities[i],r,t)
+    end
+    return SMatrix{N,3,T}(m)
 end
 
-## 2D receiver
-struct Receiver2D{T,U<:StaticMagneticFields{T},V<:StaticMagneticFields{T}} <: Receivers{T}
-    samplingRate::Real
-    xSensitivity::U
-    ySensitivity::V
-end
-
-function receiverCoilSensitivities(receiver::Receiver2D{T},r::SVector{3,T}) where T<:Real
-    px = magneticFieldStrength(receiver.xSensitivity,r)
-    py = magneticFieldStrength(receiver.ySensitivity,r)
-
-    return transpose(SMatrix{3,2}(px...,py...))
-end
-
-## 3D receiver
-struct Receiver3D{T,U<:StaticMagneticFields{T},V<:StaticMagneticFields{T},W<:StaticMagneticFields{T}} <: Receivers{T}
-    samplingRate::Real
-    xSensitivity::U
-    ySensitivity::V
-    zSensitivity::W
-end
-
-function receiverCoilSensitivities(receiver::Receiver3D{T},r::SVector{3,T}) where T<:Real
-    px = magneticFieldStrength(receiver.xSensitivity,r)
-    py = magneticFieldStrength(receiver.ySensitivity,r)
-    pz = magneticFieldStrength(receiver.zSensitivity,r)
-
-    return transpose(SMatrix{3,3}(px...,py...,pz...))
+function ReceiveCoils(samplingRate::Real,sensitivities::V) where {T,V<:Tuple{Vararg{W} where W<:StaticMagneticFields{T}}}
+    N = length(sensitivities)
+    return StaticReceiveCoils{T,N,V,typeof(samplingRate)}(samplingRate,sensitivities)
 end

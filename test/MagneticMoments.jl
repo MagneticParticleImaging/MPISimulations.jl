@@ -5,7 +5,7 @@ using Pkg.TOML, StaticArrays, LinearAlgebra
 	
 	magneticMoment = MPISimulations.initialize(MPISimulations.Langevin,"Langevin",params,Float64)
 	for T in [Float64,Float32,]
-		magneticMomentT = MPISimulations.initializeLangevin(T)
+		magneticMomentT = MPISimulations.Langevin(elementType=T)
 		@test magneticMomentT.msat ≈ magneticMoment.msat
 		@test magneticMomentT.beta ≈ magneticMoment.beta
 	end

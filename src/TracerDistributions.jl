@@ -1,20 +1,49 @@
+# Define abstract interface
+"""
+$(TYPEDEF)
+
+Abstract supertype for tracer distributions nodes.
+"""
 abstract type TracerDistributions{T} end
 
-# define interface
-## specific subtypes should implement function returning number of nanoparticles per m³ as as type T for given location r and time t
-@mustimplement tracerConcentration(tracerDistribution::TracerDistributions{T},r::SVector{3,T},t::T) where T<:Real
+"""
+$(SIGNATURES)
 
-## specific subtypes should implement function returning if tracer distribution is zero at position r for all times
-@mustimplement isZero(tracerDistribution::TracerDistributions{T},r::SVector{3,T}) where T<:Real
+Return the tracer concentration [number of particles/m³] for a given location
+r [m] and time t [s].
+"""
+function tracerConcentration(tracerDistribution::TracerDistributions{T},r::SVector{3,T},t::T) where {T}
+    error("tracerConcentration is not implemented for tracerDistribution::$(typeof(tracerDistribution)).")
+end
 
-# specific subtypes should implement function returning quadrature nodes of a given density for tracerDistributions
-@mustimplement QuadratureNodes(tracerDistribution::TracerDistributions{T},density) where T<:Real
+"""
+$(SIGNATURES)
 
-# define abstract subtypes
-## static tracer distributions
+Return if (`Bool`) magnetization field is zero at a given location r [m] at all
+times.
+"""
+function isZero(tracerDistribution::TracerDistributions{T},r::SVector{3,T}) where {T}
+    error("isZero is not implemented for tracerDistribution::$(typeof(tracerDistribution)).")
+end
+
+"""
+$(SIGNATURES)
+
+Return `QuadratureNodes` required to integrate over a region containing the
+support of the `tracerDistribution`
+"""
+function QuadratureNodes(tracerDistribution::TracerDistributions{T},density) where {T}
+    error("QuadratureNodes is not implemented for tracerDistribution::$(typeof(tracerDistribution)).")
+end
+
+"""
+$(TYPEDEF)
+
+Abstract supertype for static tracer distributions nodes.
+"""
 abstract type StaticTracerDistributions{T} <: TracerDistributions{T} end
 
-function tracerConcentration(tracerDistribution::StaticTracerDistributions{T},position::SVector{3,T},t::T) where T<:Real
+function tracerConcentration(tracerDistribution::StaticTracerDistributions{T},position::SVector{3,T},t::T) where {T}
     if isZero(tracerDistribution,position)
         return zero(T)
     else
@@ -22,20 +51,22 @@ function tracerConcentration(tracerDistribution::StaticTracerDistributions{T},po
     end
 end
 
-### homogeneous tracer distribution within axis aligned box
-struct AxisOrientedBox{T<:Real} <: StaticTracerDistributions{T}
+
+# Define specific subtypes
+## homogeneous tracer distribution within axis aligned box
+struct AxisOrientedBox{T} <: StaticTracerDistributions{T}
     tracerConcentration::T
     center::SVector{3,T}
     positiveHalfLengths::SVector{3,T}
     
-    AxisOrientedBox(tracerConcentration::T,center::Vector{T},positiveHalfLengths::Vector{T}) where T<:Real = new{T}(tracerConcentration,SVector{3,T}(center),SVector{3,T}(positiveHalfLengths))
+    AxisOrientedBox(tracerConcentration::T,center::Vector{T},positiveHalfLengths::Vector{T}) where {T} = new{T}(tracerConcentration,SVector{3,T}(center),SVector{3,T}(positiveHalfLengths))
 end
 
-@inline function isZero(tracerDistribution::AxisOrientedBox{T},r::SVector{3,T}) where T<:Real
+@inline function isZero(tracerDistribution::AxisOrientedBox{T},r::SVector{3,T}) where {T}
     return !all(abs.(tracerDistribution.center-r).<=tracerDistribution.positiveHalfLengths)
 end
 
-function QuadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3) where T<:Real
+function QuadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3) where {T}
     nx,ny,nz = round.(Int,2*density*tracerDistribution.positiveHalfLengths)
     nx = max(nx,1)
     ny = max(ny,1)
@@ -55,20 +86,20 @@ function QuadratureNodes(tracerDistribution::AxisOrientedBox{T},density=10/1e-3)
     return GaussLegendre{T}(nodesx,weightsx,nodesy,weightsy,nodesz,weightsz,n)
 end
 
-### homogeneous tracer distribution within sphere
-struct Sphere{T<:Real} <: StaticTracerDistributions{T}
+## homogeneous tracer distribution within sphere
+struct Sphere{T} <: StaticTracerDistributions{T}
     tracerConcentration::T
     center::SVector{3,T}
     radius::T
     
-    Sphere(tracerConcentration::T,center::Vector{T},radius::T) where T<:Real = new{T}(tracerConcentration,SVector{3,T}(center),radius)
+    Sphere(tracerConcentration::T,center::Vector{T},radius::T) where {T} = new{T}(tracerConcentration,SVector{3,T}(center),radius)
 end
 
-@inline function isZero(tracerDistribution::Sphere{T},r::SVector{3,T}) where T<:Real
+@inline function isZero(tracerDistribution::Sphere{T},r::SVector{3,T}) where {T}
     return norm(tracerDistribution.center-r)>tracerDistribution.radius
 end
 
-function QuadratureNodes(tracerDistribution::Sphere{T},density=10/1e-3) where T<:Real
+function QuadratureNodes(tracerDistribution::Sphere{T},density=10/1e-3) where {T}
     r = tracerDistribution.radius
     center = tracerDistribution.center
     lfb = center - SVector{3,T}(r,r,r)

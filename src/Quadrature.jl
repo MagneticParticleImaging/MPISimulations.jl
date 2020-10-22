@@ -1,10 +1,28 @@
+# Define abstract interface
+"""
+$(TYPEDEF)
+
+Abstract supertype for quadrature nodes.
+"""
 abstract type QuadratureNodes{T} end
 
-# specific subtypes should implement the julia iteration interface to return a (node,weight) tuple
-@mustimplement Base.iterate(quadratureNodes::QuadratureNodes{T}) where T<:Real
-@mustimplement Base.iterate(quadratureNodes::QuadratureNodes{T}, state) where T<:Real
+"""
+$(SIGNATURES)
 
-# gauss legendre nodes provide very good results in case, where the magnetization is continous on the integration domain
+Implements the julia iteration interface returning (node,weight) tuples
+while iterating over `quadratureNodes`.
+"""
+function Base.iterate(quadratureNodes::QuadratureNodes{T}) where {T}
+    error("Base.iterate is not implemented for quadratureNodes::$(typeof(quadratureNodes)).")
+end
+
+function Base.iterate(quadratureNodes::QuadratureNodes{T}, state) where {T}
+    error("Base.iterate is not implemented for quadratureNodes::$(typeof(quadratureNodes)).")
+end
+
+
+# Define specific subtypes
+## gauss legendre nodes provide very good results in case, where the magnetization is continous on the integration domain
 struct GaussLegendre{T} <: QuadratureNodes{T}
     nodesx::Vector{T}
     weightsx::Vector{T}
@@ -15,7 +33,7 @@ struct GaussLegendre{T} <: QuadratureNodes{T}
     n::Tuple{Int,Int,Int}
 end
 
-function Base.iterate(quadratureNodes::GaussLegendre{T}, state = (CartesianIndices(quadratureNodes.n),1)) where T<:Real
+function Base.iterate(quadratureNodes::GaussLegendre{T}, state = (CartesianIndices(quadratureNodes.n),1)) where {T}
     (cartesian,counter) = state
 
     if counter>length(cartesian)
@@ -28,7 +46,7 @@ function Base.iterate(quadratureNodes::GaussLegendre{T}, state = (CartesianIndic
     end
 end
 
-# midpoint nodes are the fall back option, where the magnetization is non-continous on the integration domain
+## midpoint nodes are the fall back option, where the magnetization is non-continous on the integration domain
 struct MidPoint{T,U<:AbstractVector{T},V<:AbstractVector{T},W<:AbstractVector{T}} <: QuadratureNodes{T}
     nodesx::U
     nodesy::V
@@ -37,7 +55,7 @@ struct MidPoint{T,U<:AbstractVector{T},V<:AbstractVector{T},W<:AbstractVector{T}
     n::Tuple{Int,Int,Int}
 end
 
-function Base.iterate(quadratureNodes::MidPoint{T}, state = (CartesianIndices(quadratureNodes.n),1)) where T<:Real
+function Base.iterate(quadratureNodes::MidPoint{T}, state = (CartesianIndices(quadratureNodes.n),1)) where {T}
     (cartesian,counter) = state
 
     if counter>length(cartesian)
@@ -49,7 +67,7 @@ function Base.iterate(quadratureNodes::MidPoint{T}, state = (CartesianIndices(qu
     end
 end
 
-function MidPoint(lfb::SVector{3,T},rrt::SVector{3,T},density=10/1e-3) where T<:Real
+function MidPoint(lfb::SVector{3,T},rrt::SVector{3,T},density=10/1e-3) where {T}
     nx,ny,nz = round.(Int,abs.(density*(rrt-lfb)))
     nx = max(nx,1)
     ny = max(ny,1)

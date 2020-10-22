@@ -1,25 +1,51 @@
-abstract type ExcitationFields{T} end
+# Define abstract interface
+"""
+$(TYPEDEF)
 
-# define interface
-## return magnetic field strengths H as Vector{SVector{3,T}} at given location r and time t
-@mustimplement excitationFieldStrength(excitation::ExcitationFields{T},r::SVector{3,T},t::T) where T<:Real
+Abstract supertype for excitation fields.
+"""
+abstract type ExcitationFields{T,N} end
+
+"""
+$(SIGNATURES)
+
+Initialize an excitation field given a `selectionField` and multiple 
+`excitationFields`.
+"""
+function ExcitationField(selectionField::MagneticFields{T}, excitationFields::U) where {T,U<:Tuple{Vararg{W} where W<:MagneticFields{T}}}
+    error("ExcitationField is not implemented for selectionField::$(typeof(selectionField)) and excitationFields::$(typeof(excitationFields)).")
+end
+
+function ExcitationField(selectionField::MagneticFields, excitationFields...)
+    return ExcitationField(selectionField,tuple(excitationFields...))
+end
+
+"""
+$(SIGNATURES)
+
+Return the magnetic field strength H [T/μ₀] (μ₀ being the vacuum permeability)
+as `SVector{3,T}` for a given location r [m] and time t [s].
+"""
+function magneticFieldStrength(excitation::ExcitationFields{T,N},r::SVector{3,T},t::T) where {T,N}
+    error("magneticFieldStrength is not implemented for $(typeof(excitation)).")
+end
 
 
-## Selection field and ND sinusoidal excitation field
-struct SinusoidalExcitationField{T<:Real,N,U<:StaticMagneticFields{T}} <: ExcitationFields{T}
+# Define specific subtypes
+## Selection field and N-dimensional sinusoidal excitation field
+struct SinusoidalExcitationField{T,N,U<:StaticMagneticFields{T}} <: ExcitationFields{T,N}
     selectionField::U
-    excitationFields::NTuple{N,SinusoidalField{T}}
+    sinusoidalFields::NTuple{N,SinusoidalField{T}}
 end
 
-function SinusoidalExcitationField(selectionField::StaticMagneticFields{T}, sinusoidalFields...) where T<:Real
-    excitationFields = tuple(sinusoidalFields...)
-    SinusoidalExcitationField(selectionField,excitationFields)
+function ExcitationField(selectionField::U, magneticFields::NTuple{N,SinusoidalField{T}}) where {T,N,U<:StaticMagneticFields{T}}
+    return SinusoidalExcitationField{T,N,U}(selectionField,magneticFields)
 end
 
-function excitationFieldStrength(excitation::SinusoidalExcitationField{T},r::SVector{3,T},t::T) where T<:Real
+function magneticFieldStrength(excitation::SinusoidalExcitationField{T,N},r::SVector{3,T},t::T) where {T,N}
     H = magneticFieldStrength(excitation.selectionField,r,t)
-    for sinusoidalField in excitation.excitationFields
-        H += magneticFieldStrength(sinusoidalField,r,t)
+    @inbounds for i =1:N
+        H += magneticFieldStrength(excitation.sinusoidalFields[i],r,t)
     end
     return H
 end

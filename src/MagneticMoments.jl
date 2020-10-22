@@ -1,36 +1,47 @@
+# Define abstract interface
+"""
+$(TYPEDEF)
+
+Abstract supertype for magnetic moments.
+"""
 abstract type MagneticMoments{T} end
 
-# define interface
-## return magnetic moment of a single particle as SVector{3,T} for given external field H at time t
-@mustimplement meanMagneticMoment(magneticMoment::MagneticMoments{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
+"""
+$(SIGNATURES)
 
-# define specific subtypes
-## Langevin Model
-struct Langevin{T<:Real} <: MagneticMoments{T}
+Return the mean magnetic moment [Am²] as `SVector{3,T}` for a given magnetic
+field H [T/μ₀] (μ₀ being the vacuum permeability), location r [m] and time t [s].
+"""
+function meanMagneticMoment(magneticMoment::MagneticMoments{T},H::SVector{3,T},r::SVector{3,T},t::T) where {T}
+    error("meanMagneticMoment is not implemented for magneticMoment::$(typeof(magneticMoment)).")
+end
+
+
+# Define specific subtypes
+## Langevin model
+struct Langevin{T} <: MagneticMoments{T}
     msat::T
     beta::T
 end
 
 """
-    `initializeLangevin(S;d=25e-9,T=294,Mrel=0.6)`
+$(SIGNATURES)
 
-Initialize Langevin type magnetic nanoparticles with diameter d (meter),
-temperature T (Kelvin) and relative saturation magnetization Mrel = M*μ₀
-(μ₀ being the vacuum permeability) using the keyword arguments. The underlying
-numeric type can be specified via the optional argument S which can be any 
-subtype of Real.
+Initialize `Langevin` type `MagneticMoments` with diameter `d` [m], temperature
+`T` [K], relative saturation magnetization [T] `Mrel` = Msat*μ₀ (μ₀ being
+the vacuum permeability) and numeric `elementType`.
 """
-function initializeLangevin(S::Type{U}=Float64;d=25e-9,T=294,Mrel=0.6) where U<:Real
+function Langevin(;elementType=Float64,d=25e-9,T=294,Mrel=0.6)
     k = 1.380650424e-23 #Boltzman constant
     μ₀ = 4*π*1e-7 #vacuum permeability
     M = Mrel / μ₀ #saturation magnetization of magnetic material the core is made of
     msat = M * π/6*d^3 #saturation magnetic moment of a single nanoparticle
     beta = msat /(k*T) #H measured in T/μ₀
 
-    Langevin{S}(msat,beta)
+    Langevin{elementType}(msat,beta)
 end
 
-function meanMagneticMoment(magneticMoment::Langevin{T},H::SVector{3,T},r::SVector{3,T},t::T) where T<:Real
+function meanMagneticMoment(magneticMoment::Langevin{T},H::SVector{3,T},r::SVector{3,T},t::T) where {T}
     if norm(H)!=0
         x = magneticMoment.beta*norm(H)
         return magneticMoment.msat*(coth(x) - 1/x)*normalize(H)

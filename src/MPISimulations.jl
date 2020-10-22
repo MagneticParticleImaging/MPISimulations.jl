@@ -1,8 +1,7 @@
 module MPISimulations
 
-using Pkg.TOML, StaticArrays, LinearAlgebra, FastGaussQuadrature
+using Pkg.TOML, StaticArrays, LinearAlgebra, FastGaussQuadrature, DocStringExtensions
 
-include("Misc.jl")
 include("TOML.jl")
 
 include("Quadrature.jl")

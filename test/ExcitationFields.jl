@@ -10,12 +10,12 @@ using Pkg.TOML, StaticArrays
     r = randn(SVector{3,Float64})
     t = randn(Float64)
     
-    excitation = MPISimulations.SinusoidalExcitationField(Hs,H1)
-    @test MPISimulations.excitationFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t)
+    excitation = MPISimulations.ExcitationField(Hs,H1)
+    @test MPISimulations.magneticFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t)
 
-    excitation = MPISimulations.SinusoidalExcitationField(Hs,H1,H2)
-    @test MPISimulations.excitationFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t) + MPISimulations.magneticFieldStrength(H2,r,t)
+    excitation = MPISimulations.ExcitationField(Hs,H1,H2)
+    @test MPISimulations.magneticFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t) + MPISimulations.magneticFieldStrength(H2,r,t)
 
-    excitation = MPISimulations.SinusoidalExcitationField(Hs,H1,H2,H3)
-    @test MPISimulations.excitationFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t) + MPISimulations.magneticFieldStrength(H2,r,t) + MPISimulations.magneticFieldStrength(H3,r,t)
+    excitation = MPISimulations.ExcitationField(Hs,H1,H2,H3)
+    @test MPISimulations.magneticFieldStrength(excitation,r,t) ≈ MPISimulations.magneticFieldStrength(Hs,r,t) + MPISimulations.magneticFieldStrength(H1,r,t) + MPISimulations.magneticFieldStrength(H2,r,t) + MPISimulations.magneticFieldStrength(H3,r,t)
 end
